@@ -19,7 +19,7 @@ data_comp, map_visualizer, cvae = st.tabs(["Data Comparison", "Map Visualizer", 
 
 with data_comp:
     st.header("tSZ vs. kSZ Map Comparisons")
-    st.caption("Compare corresponding kSZ and tSZ maps")
+    st.write("Compare corresponding kSZ and tSZ maps")
 
     st.button("Random Halo ID", help="Click to randomize halo ID", on_click=SZplt.randomize_halo_id)
     halo_id = st.number_input('Halo ID', 0, 987, step=1, key='halo_id')
@@ -34,7 +34,7 @@ with data_comp:
 
 with map_visualizer:
     st.header("SZ Map Visualizer")
-    st.caption("View tSZ and kSZ maps with specific mass accretion rate and mass")
+    st.write("View tSZ and kSZ maps with specific mass accretion rate and mass")
     macc_choice = st.selectbox("Mass Accretion Rate", options_macc)
     mass_options = SZplt.filter_mass_options(macc_choice)
     if len(mass_options) == 1:
@@ -74,3 +74,4 @@ with map_visualizer:
 
 with cvae:
     st.header("Generate kSZ Images with CosmicVAE")
+    st.write("Generate novel kSZ images with a conditional variational autoencoder (CVAE)")
