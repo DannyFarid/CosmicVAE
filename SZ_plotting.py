@@ -1,10 +1,8 @@
-import io
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 from math import floor
 import streamlit as st
-from matplotlib.gridspec import GridSpec
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from SZ_objects import tSZ_halos, kSZ_halos
 
@@ -19,7 +17,7 @@ def display_imgs(kSZ, tSZ):
     cbar.ax.tick_params(size=2, labelsize=5)
     cbar.ax.yaxis.get_offset_text().set_fontsize(5)
     ax[0].text(1, 10, 'tSZ', fontsize=10, color="white")
-    ax[0].text(80, 10, f"{np.round(tSZ.macc, 2)},{np.round(tSZ.m200c, 2)}", fontsize=7, color="white")
+    ax[0].text(80, 10, f"{np.round(tSZ.macc, 2)}, {np.round(tSZ.m200c, 2)}", fontsize=7, color="white")
 
     # kSZ
     im1 = ax[1].imshow(kSZ.image, vmin=-2e-7, vmax=2e-7)
@@ -29,7 +27,7 @@ def display_imgs(kSZ, tSZ):
     cbar.ax.tick_params(size=2, labelsize=5)
     cbar.ax.yaxis.get_offset_text().set_fontsize(5)
     ax[1].text(1, 10, 'kSZ', fontsize=10)
-    ax[1].text(80, 10, f"{np.round(kSZ.macc, 2)},{np.round(kSZ.m200c, 2)}", fontsize=7, color="black")
+    ax[1].text(80, 10, f"{np.round(kSZ.macc, 2)}, {np.round(kSZ.m200c, 2)}", fontsize=7, color="black")
 
 
     ax[0].set_xticks([], [])

@@ -1,13 +1,6 @@
-from astropy.io import fits
-import matplotlib.pyplot as plt
 import numpy as np
 from dataclasses import dataclass
-import pandas as pd
 from math import floor
-import streamlit as st
-import plotly.express as px
-from matplotlib.gridspec import GridSpec
-from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 @dataclass
 class SZ:

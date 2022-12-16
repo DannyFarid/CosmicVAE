@@ -2,7 +2,7 @@ import io
 import streamlit as st
 import numpy as np
 import SZ_plotting as SZplt
-from SZ_objects import options_macc, kSZ_halos
+from SZ_objects import options_macc
 # from SZ_CVAE import vae, X_VAL
 
 def download_fig(macc_choice, mass_choice, fig):
