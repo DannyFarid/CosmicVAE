@@ -6,10 +6,10 @@ from SZ_objects import options_macc, kSZ_halos
 # from SZ_CVAE import vae, X_VAL
 
 st.set_page_config(
-    page_title="SZ Map Dashboard", 
+    page_title="CosmicVAE", 
     page_icon="https://ibb.co/LCn1Wn1",
     layout="wide")
-st.title("SZ Map Dashboard")
+st.title("CosmicVAE Dashboard")
 st.caption("Daniel Farid")
 st.caption("AMTH 491, Yale University Program in Applied Mathematics")
 
@@ -18,7 +18,7 @@ SZ_comp, custom_map, cvae = st.tabs(["Data Comparison", "Map Visualizer", "CVAE 
 # -------------------- kSZ vs tSZ Map Comparisons -------------------- #
 
 with SZ_comp:
-    st.header("kSZ vs. tSZ Map Comparisons")
+    st.header("tSZ vs. kSZ Map Comparisons")
     st.caption("Compare corresponding kSZ and tSZ maps")
 
     st.button("Random Halo ID", help="Click to randomize halo ID", on_click=SZplt.randomize_halo_id)
@@ -27,8 +27,8 @@ with SZ_comp:
     fig, kSZ, tSZ = SZplt.display_SZ_imgs(halo_id)
     st.pyplot(fig)
     with st.expander("Halo properties"):
-        st.latex(f"\\text{{Mass Accretion Rate:}} {kSZ.macc}")
-        st.latex(f"\\text{{Mass (m200c)}}: 10^{{{kSZ.m200c}}}")
+        st.latex(f"\\text{{Mass Accretion Rate: }} {np.round(kSZ.macc, 2)}")
+        st.latex(f"\\text{{Mass (m200c)}}: 10^{{{np.round(kSZ.m200c, 2)}}}")
 
 # -------------------- kSZ Map Visualizer -------------------- #
 
@@ -71,7 +71,3 @@ with custom_map:
             file_name=f"t{filename}.csv",
             help=f"Download CSV (t{filename}.csv)"
         )
-
-
-
-

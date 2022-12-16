@@ -9,19 +9,25 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 from SZ_objects import tSZ_halos, kSZ_halos
 
 def display_imgs(kSZ, tSZ):
-    fig, ax = plt.subplots(1,2, figsize=(10,10))
+    fig, ax = plt.subplots(1,2, figsize=(5,5))
 
-    im0 = ax[0].imshow(tSZ.image, vmin=-2e-6, vmax=2e-6)
+    # tSZ
+    im0 = ax[0].imshow(tSZ.image, vmin=0, vmax=2e-6)
     divider = make_axes_locatable(ax[0])
     cax = divider.append_axes('right', size='5%', pad=0.05)
-    fig.colorbar(im0, cax=cax, orientation='vertical')
-    ax[0].text(1, 1, 'tSZ', fontsize=20)
+    cbar = fig.colorbar(im0, cax=cax, orientation='vertical')
+    cbar.ax.tick_params(size=2, labelsize=5)
+    cbar.ax.yaxis.get_offset_text().set_fontsize(5)
+    ax[0].text(1, 10, 'tSZ', fontsize=10, color="white")
     
+    # kSZ
     im1 = ax[1].imshow(kSZ.image, vmin=-2e-7, vmax=2e-7)
     divider = make_axes_locatable(ax[1])
     cax = divider.append_axes('right', size='5%', pad=0.05)
-    fig.colorbar(im1, cax=cax, orientation='vertical')
-    ax[1].text(1, 1, 'kSZ', fontsize=20)
+    cbar = fig.colorbar(im1, cax=cax, orientation='vertical')
+    cbar.ax.tick_params(size=2, labelsize=5)
+    cbar.ax.yaxis.get_offset_text().set_fontsize(5)
+    ax[1].text(1, 10, 'kSZ', fontsize=10)
 
     ax[0].set_xticks([], [])
     ax[0].set_yticks([], [])
