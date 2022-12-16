@@ -50,6 +50,6 @@ def filter_mass_options(macc: int):
     return mass_options
 
 def save_fig_to_pdf(macc: int, mass: float, fig: matplotlib.figure.Figure):
-    filename = f"downloadables/SZ_{macc}_{np.round(mass, 3)}"
+    filename = f"SZ_{macc}_{np.round(mass, 3)}"
     fig.savefig(filename, format="pdf", bbox_inches="tight")
     return filename
