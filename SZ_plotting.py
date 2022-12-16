@@ -19,7 +19,8 @@ def display_imgs(kSZ, tSZ):
     cbar.ax.tick_params(size=2, labelsize=5)
     cbar.ax.yaxis.get_offset_text().set_fontsize(5)
     ax[0].text(1, 10, 'tSZ', fontsize=10, color="white")
-    
+    ax[0].text(80, 10, f"{np.round(tSZ.macc, 2)},{np.round(tSZ.m200c, 2)}", fontsize=7, color="white")
+
     # kSZ
     im1 = ax[1].imshow(kSZ.image, vmin=-2e-7, vmax=2e-7)
     divider = make_axes_locatable(ax[1])
@@ -28,6 +29,8 @@ def display_imgs(kSZ, tSZ):
     cbar.ax.tick_params(size=2, labelsize=5)
     cbar.ax.yaxis.get_offset_text().set_fontsize(5)
     ax[1].text(1, 10, 'kSZ', fontsize=10)
+    ax[1].text(80, 10, f"{np.round(kSZ.macc, 2)},{np.round(kSZ.m200c, 2)}", fontsize=7, color="black")
+
 
     ax[0].set_xticks([], [])
     ax[0].set_yticks([], [])
@@ -56,6 +59,6 @@ def filter_mass_options(macc: int):
     return mass_options
 
 def save_fig_to_pdf(macc: int, mass: float, fig: matplotlib.figure.Figure):
-    filename = f"SZ_{macc}_{np.round(mass, 3)}"
+    filename = f"SZ_{macc}_{np.round(mass, 2)}"
     fig.savefig(filename, format="pdf", bbox_inches="tight")
     return filename

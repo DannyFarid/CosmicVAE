@@ -5,6 +5,35 @@ import SZ_plotting as SZplt
 from SZ_objects import options_macc, kSZ_halos
 # from SZ_CVAE import vae, X_VAL
 
+def download_fig(macc_choice, mass_choice, fig):
+    filename = SZplt.save_fig_to_pdf(macc_choice, mass_choice, fig)
+    with open(filename, "rb") as img:
+        st.download_button(
+            "Download Figure", 
+            data=img, 
+            file_name=f"{filename}.pdf", 
+            help=f"Download PDF ({filename}.pdf)"
+        )
+    return filename
+
+def download_data(kSZ, tSZ, filename):
+    with io.BytesIO() as buffer:
+        np.savetxt(buffer, kSZ.image, delimiter=",")
+        st.download_button(
+            "Download kSZ Image Data (CSV)", 
+            data=buffer, 
+            file_name=f"k{filename}.csv",
+            help=f"Download CSV (k{filename}.csv)",
+        )
+
+        np.savetxt(buffer, tSZ.image, delimiter=",")
+        st.download_button(
+            "Download tSZ Image Data (CSV)", 
+            data=buffer, 
+            file_name=f"t{filename}.csv",
+            help=f"Download CSV (t{filename}.csv)"
+        )
+
 st.set_page_config(
     page_title="CosmicVAE", 
     page_icon="https://ibb.co/LCn1Wn1",
@@ -26,9 +55,10 @@ with data_comp:
 
     fig, kSZ, tSZ = SZplt.display_SZ_imgs(halo_id)
     st.pyplot(fig)
-    with st.expander("Halo properties"):
-        st.latex(f"\\text{{Mass Accretion Rate: }} {np.round(kSZ.macc, 2)}")
-        st.latex(f"\\text{{Mass (m200c)}}: 10^{{{np.round(kSZ.m200c, 2)}}}")
+    macc = np.round(kSZ.macc, 2)
+    mass = np.round(kSZ.m200c, 2)
+    filename = download_fig(macc, mass, fig)
+    download_data(kSZ, tSZ, filename)
 
 # -------------------- kSZ Map Visualizer -------------------- #
 
@@ -44,33 +74,10 @@ with map_visualizer:
         mass_choice = st.select_slider("Mass", mass_options)
 
     fig, kSZ, tSZ = SZplt.select_img(macc_choice, mass_choice)
-    st.pyplot(fig)
+    st.pyplot(fig) 
 
-    filename = SZplt.save_fig_to_pdf(macc_choice, mass_choice, fig)
-    with open(filename, "rb") as img:
-        st.download_button(
-            "Download Figure", 
-            data=img, 
-            file_name=f"{filename}.pdf", 
-            help=f"Download PDF ({filename}.pdf)"
-        )
-
-    with io.BytesIO() as buffer:
-        np.savetxt(buffer, kSZ.image, delimiter=",")
-        st.download_button(
-            "Download kSZ Image Data (CSV)", 
-            data=buffer, 
-            file_name=f"k{filename}.csv",
-            help=f"Download CSV (k{filename}.csv)",
-        )
-
-        np.savetxt(buffer, tSZ.image, delimiter=",")
-        st.download_button(
-            "Download tSZ Image Data (CSV)", 
-            data=buffer, 
-            file_name=f"t{filename}.csv",
-            help=f"Download CSV (t{filename}.csv)"
-        )
+    filename = download_fig(macc_choice, mass_choice, fig)
+    download_data(kSZ, tSZ, filename)
 
 with cvae:
     st.header("Generate kSZ Images with CosmicVAE")
