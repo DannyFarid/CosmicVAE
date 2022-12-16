@@ -13,11 +13,11 @@ st.title("CosmicVAE Dashboard")
 st.caption("Daniel Farid")
 st.caption("AMTH 491, Yale University Program in Applied Mathematics")
 
-SZ_comp, custom_map, cvae = st.tabs(["Data Comparison", "Map Visualizer", "CVAE Map Generation"])
+data_comp, map_visualizer, cvae = st.tabs(["Data Comparison", "Map Visualizer", "CVAE Map Generation"])
 
 # -------------------- kSZ vs tSZ Map Comparisons -------------------- #
 
-with SZ_comp:
+with data_comp:
     st.header("tSZ vs. kSZ Map Comparisons")
     st.caption("Compare corresponding kSZ and tSZ maps")
 
@@ -32,14 +32,14 @@ with SZ_comp:
 
 # -------------------- kSZ Map Visualizer -------------------- #
 
-with custom_map:
+with map_visualizer:
     st.header("SZ Map Visualizer")
     st.caption("View tSZ and kSZ maps with specific mass accretion rate and mass")
     macc_choice = st.selectbox("Mass Accretion Rate", options_macc)
     mass_options = SZplt.filter_mass_options(macc_choice)
     if len(mass_options) == 1:
         mass_choice = mass_options[0]
-        st.write(f"Mass Accretion Rate (only one option): {mass_choice}")
+        st.write(f"Mass (only one option): {mass_choice}")
     else:
         mass_choice = st.select_slider("Mass", mass_options)
 
@@ -71,3 +71,6 @@ with custom_map:
             file_name=f"t{filename}.csv",
             help=f"Download CSV (t{filename}.csv)"
         )
+
+with cvae:
+    st.header("Generate kSZ Images with CosmicVAE")
