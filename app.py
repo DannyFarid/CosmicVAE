@@ -75,3 +75,6 @@ with map_visualizer:
 with cvae:
     st.header("Generate kSZ Images with CosmicVAE")
     st.write("Generate novel kSZ images with a conditional variational autoencoder (CVAE)")
+    mass_choice = st.number_input("Mass", value=14.0, help="Input desired mass of generated kSZ image")
+    macc_choice = st.number_input("Mass Accretion Rate", value=3.0, help="Input desired mass accretion rate of generated kSZ image")
+    st.button("Generate Image", help="Generate kSZ Image with CosmicVAE")
