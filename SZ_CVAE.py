@@ -211,4 +211,6 @@ vae.load_weights("kSZ_vae_weights_GOOD")
 def generate_map(macc, m200c):
     noise_array = np.random.normal(size=(1,latent_dim), scale=1)
     prediction = vae.decoder.predict([noise_array, np.array([10**(m200c - 13)]), np.array([macc])])
+    prediction = prediction * 1e-7
+    prediction = (prediction - np.mean(prediction)) * 10 
     return prediction[0]
