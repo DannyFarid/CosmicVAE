@@ -5,10 +5,11 @@ from math import floor
 import streamlit as st
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from SZ_objects import tSZ_halos, kSZ_halos
+from SZ_CVAE import generate_map
 
 def display_imgs(kSZ, tSZ):
     fig, ax = plt.subplots(1,2, figsize=(5,5))
-
+    
     # tSZ
     im0 = ax[0].imshow(tSZ.image, vmin=0, vmax=2e-6)
     divider = make_axes_locatable(ax[0])
@@ -28,7 +29,6 @@ def display_imgs(kSZ, tSZ):
     cbar.ax.yaxis.get_offset_text().set_fontsize(5)
     ax[1].text(1, 10, 'kSZ', fontsize=10)
     ax[1].text(80, 10, f"{np.round(kSZ.macc, 2)}, {np.round(kSZ.m200c, 2)}", fontsize=7, color="black")
-
 
     ax[0].set_xticks([], [])
     ax[0].set_yticks([], [])

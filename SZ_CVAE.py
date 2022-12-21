@@ -1,21 +1,10 @@
 import numpy as np
-import scipy
-import streamlit as st
-import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
-from datetime import datetime
-import os
 import tensorflow as tf
-from tensorflow.keras.layers import LeakyReLU, Conv2D, Flatten, Dense, UpSampling2D, Reshape, Concatenate, Dropout, Conv2DTranspose, MaxPooling2D
+from tensorflow.keras.layers import LeakyReLU, Conv2D, Flatten, Dense, UpSampling2D, Reshape, Concatenate
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Input
-from tensorflow.keras.applications.vgg16 import VGG16
-from tensorflow.keras.applications.vgg16 import preprocess_input
-import keras
 from keras import backend as K
-
-# set to True to re-train CVAE
-TRAIN = False
 
 # define functions for processing images
 def preprocess(_imgs):
@@ -49,7 +38,7 @@ X_TRAIN = [preprocess(sz_train), 10**(mass_train - 13), macc_train]
 X_VAL = [preprocess(sz_test), 10**(mass_test - 13), macc_test]
 
 # build CVAE network
-latent_dim = 64
+latent_dim = 16
 dim = 128
 
 class Sampling(tf.keras.layers.Layer):
@@ -217,51 +206,9 @@ class VAE(tf.keras.Model):
         }
     
 vae = VAE(encoder, decoder)
+vae.load_weights("kSZ_vae_weights_GOOD")
 
-datagen = tf.keras.preprocessing.image.ImageDataGenerator(rotation_range=0, vertical_flip=True, horizontal_flip=True,
-#                                                           fill_mode='constant', cval=0
-                                                         )
-val_datagen = tf.keras.preprocessing.image.ImageDataGenerator(rotation_range=0, vertical_flip=True, horizontal_flip=True,
-#                                                           fill_mode='constant', cval=0
-                                                         )
-
-class KLAnnealingCallback(tf.keras.callbacks.Callback):
-    def __init__(self, schedule, variable):
-        super(KLAnnealingCallback, self).__init__()
-        self.schedule = schedule
-        self.variable = variable
-    def on_epoch_begin(self, epoch, logs={}):
-        value = self.schedule(epoch)
-        assert type(value) == float
-        K.set_value(self.variable, value)
-
-# train CVAE if training, otherwise just load saved weights
-if TRAIN:
-    vae.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=1e-4))
-
-    early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_reconstruction_loss', patience=150)
-    reduce_lr = tf.keras.callbacks.ReduceLROnPlateau(monitor='val_reconstruction_loss', factor=0.2, patience=75, verbose=1)
-    nan_terminate = tf.keras.callbacks.TerminateOnNaN()
-    model_checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(
-        filepath=os.path.join('unnorm_tmp', 'model_checkpoint.ckpt'),
-        save_freq=5 * len(X_TRAIN[0]),
-        save_weights_only=True,
-        monitor='reconstruction_loss',
-        save_best_only=True)
-
-    logdir = os.path.join("logs", datetime.now().strftime("%Y%m%d-%H%M%S"))
-    history = vae.fit(
-        datagen.flow((X_TRAIN[0], X_TRAIN[1:]), batch_size=BATCH_SIZE),
-        steps_per_epoch=len(X_TRAIN[0]) / BATCH_SIZE,
-        epochs=300,
-        shuffle=True,
-        validation_data=val_datagen.flow((X_VAL[0], X_VAL[1:]), batch_size=BATCH_SIZE),
-        callbacks=[early_stopping, reduce_lr, nan_terminate, model_checkpoint_callback, KLAnnealingCallback(get_alpha, alpha)]
-    )
-    
-    vae.save_weights('kSZ_vae_weights')
-else:
-    vae.load_weights("cvae_weights/kSZ_vae_weights")  
-
-
-
+def generate_map(macc, m200c):
+    noise_array = np.random.normal(size=(1,latent_dim), scale=1)
+    prediction = vae.decoder.predict([noise_array, np.array([10**(m200c - 13)]), np.array([macc])])
+    return prediction[0]
